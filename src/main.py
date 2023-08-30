@@ -8,7 +8,7 @@ from src.routes import (
 
 import os
 
-stage = os.environ.get('stage', None)
+stage = os.getenv("stage", "dev")
 
 print("STAGE: ", stage)
 

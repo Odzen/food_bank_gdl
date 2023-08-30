@@ -24,7 +24,6 @@ mongodb_uri = "mongodb+srv://{username}:{password}@{cluster_domain}/?retryWrites
         cluster_domain = db_settings.db_cluster_domain
 )
 
-print("Mondo uri: ", mongodb_uri)
 
 client = MongoClient(mongodb_uri, tlsCAFile=certifi.where())
 
