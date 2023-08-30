@@ -6,4 +6,5 @@
 3. Activate env: `source env/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
 5. Run API: `uvicorn src.main:app --reload`
+6. Go to `http://127.0.0.1:8000/docs` to see the documentation on swagger.
 
