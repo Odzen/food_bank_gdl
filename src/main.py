@@ -3,25 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 
 from src.routes import (
-    auth, users
+    users, auth
 )
 
 import os
-# from config import stage
-
-# Setting up path that is used to server the app
-# To make it work live on AWS Lambda and locally
 
 stage = os.environ.get('stage', None)
 
-prefix = f"/{stage}" if stage else "/"
-
 print("STAGE: ", stage)
-print("prefix: ", prefix)
 
 title = f"Food bank API -- {stage}"
 
-app = FastAPI(title=title, root_path=prefix)
+app = FastAPI(title=title)
 
 app.include_router(auth.router)
 app.include_router(users.router)
