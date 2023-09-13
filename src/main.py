@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 
 from src.routes import (
-    users, auth
+    users, auth, mailgun
 )
 
 import os
@@ -18,6 +18,7 @@ app = FastAPI(title=title)
 
 app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(mailgun.router)
 
 app.add_middleware(
     CORSMiddleware,
