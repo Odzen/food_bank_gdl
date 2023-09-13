@@ -24,8 +24,7 @@ class User(BaseModel):
     last_login: datetime
     created_at: datetime
     updated_at: datetime
-    # TODO[pydantic]: The following keys were removed: `json_encoders`.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+
     model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True, json_encoders={ObjectId: str}, json_schema_extra={
         "example": {
             "_id": "6adjq9q39dsf214",
