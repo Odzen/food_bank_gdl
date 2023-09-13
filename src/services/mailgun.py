@@ -1,5 +1,6 @@
 from src.config.mailgun import mailgun_settings
-import httpx
+from src.schemas.mailgun import SendEmailBody
+import json
 import requests
 
 
@@ -10,20 +11,24 @@ class MailgunService():
         self.data = {"from": f"{mailgun_settings.mailgun_from}@{mailgun_settings.mailgun_domain}"}
         
         
-    async def send_template_email(self, to: str, subject: str, template: str, variables: dict):
+    async def send_template_email(self, send_email_body: SendEmailBody):
         data = self.data
         
+        to = f"{send_email_body.recipient_name} <{send_email_body.recipient_email}>"
+        
         data["to"] = to
-        data["subject"] = subject
-        data["template"] = template
-        data["h:X-Mailgun-Variables"] = variables.__str__()
+        data["subject"] = send_email_body.subject
+        data["template"] = send_email_body.template
+        data["h:X-Mailgun-Variables"] = json.dumps(send_email_body.variables)
         
         try:
             response = requests.post(
                     f"https://{mailgun_settings.mailgun_api_url}/{mailgun_settings.mailgun_domain}/messages",
                     auth=("api", mailgun_settings.mailgun_api_key),
                     data=data)
+            
             return response.json()
+        
         except Exception as e:
             raise e
     
