@@ -11,3 +11,7 @@ class SendEmailBody(BaseModel):
     subject: str
     template: AvailableTemplatesNames
     variables: dict
+    
+class ResponseEmailSent(BaseModel):
+    id: str
+    message: str
