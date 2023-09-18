@@ -11,11 +11,13 @@ from pymongo import ReturnDocument
 from pymongo.errors import DuplicateKeyError
 from src.utils.cryptography import get_hashed_password
 from typing import List
+from src.models.requests import TypeRequest, StateRequest
 
 class UserService():
 
     def __init__(self):
         self.users_collection = db["users"]
+        self.requests_collection = db["requests"]
         
     def get_user_by_ID(self, id: PyObjectId) -> User:
         
@@ -89,6 +91,14 @@ class UserService():
     
     def create(self, user_to_create: CreateUser, user_id_creator: PyObjectId | None = None) -> User:
         
+        approved_request = self.requests_collection.find_one({"email": user_to_create.email, "type": TypeRequest.account_creation, "state": StateRequest.approved})
+
+        if not approved_request:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="There is no approved request with this email."
+            )
+            
         user_to_create = jsonable_encoder(user_to_create)
         user_to_create["email"] = user_to_create["email"].lower()
         user_to_create["password"] = get_hashed_password(user_to_create["password"])

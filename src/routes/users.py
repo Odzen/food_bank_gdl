@@ -25,7 +25,7 @@ async def retrieve_user_by_id(id: PyObjectId, user=Depends(user_is_dev)):
     )
 
 
-@router.get("/users", response_model=Page[dict], tags=["users"])
+@router.get("/users", response_model=Page[dict], dependencies=[Depends(get_user_from_access_token)], tags=["users"])
 async def list_all_users(email: EmailStr = None, role: Roles = None):
     users = []
 

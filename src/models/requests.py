@@ -19,6 +19,7 @@ class StateRequest(str, Enum):
 class Request(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     type: TypeRequest
+    email: Optional[EmailStr]
     state: StateRequest
     title: Optional[str]
     description: Optional[str]

@@ -8,6 +8,7 @@ from src.models.requests import TypeRequest, StateRequest, Request
 class CreateRequest(BaseModel):
     type: TypeRequest
     state: StateRequest
+    email: Optional[str]
     title: Optional[str]
     description: Optional[str]
     
@@ -18,7 +19,6 @@ class CreateRequest(BaseModel):
         populate_by_name=True, 
         arbitrary_types_allowed=True, 
         json_encoders={ObjectId: str},
-        fields = {'id': '_id'},
         json_schema_extra={
             "example": {
                 "_id": "6adjq9q39dsf214",

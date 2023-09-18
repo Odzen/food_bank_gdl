@@ -17,11 +17,10 @@ class CreateUser(BaseModel):
     created_at: datetime = Field(default_factory = datetime.now)
     updated_at: datetime = Field(default_factory = datetime.now)
 
-    class config:
-        populate_by_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-        fields = {'id': '_id'}
+    model_config = ConfigDict(
+        populate_by_name = True,
+        arbitrary_types_allowed = True,
+        json_encoders = {ObjectId: str},
         json_schema_extra = {
                 "example": {
                     "first_name": "Harry",
@@ -33,7 +32,7 @@ class CreateUser(BaseModel):
                     "created_at": "2023-01-10T18:16:44.595096",
                     "updated_at": "2023-01-10T18:16:44.595096"
             }
-        }
+        })
 
 class UserRetrieved(User):
     model_config = ConfigDict(exclude={'password'})
