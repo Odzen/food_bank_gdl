@@ -4,6 +4,7 @@ from enum import Enum
 
 class AvailableTemplatesNames(str, Enum):
     auth_request = "auth-request"
+    notification_user_auth = "notification-user-auth"
 
 class SendEmailBody(BaseModel):
     recipient_name: str

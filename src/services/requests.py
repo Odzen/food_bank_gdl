@@ -40,10 +40,17 @@ class RequestsService():
 
         return RequestRetrieved(**request) 
     
-    async def create_request(self, request_to_create: CreateRequest) -> RequestRetrieved:
+    async def create_request(self, request_to_create: CreateRequest, user_creator: User = None) -> RequestRetrieved:
         try:
             request_to_create = jsonable_encoder(request_to_create)
             inserted_request = self.requests_collection.insert_one(request_to_create)
+            
+            if user_creator:
+                self.requests_collection.find_one_and_update(
+                    {"_id": inserted_request.inserted_id},
+                    {"$set": {"created_by": user_creator.id}},
+                    return_document= ReturnDocument.AFTER
+                )
             
         except Exception as e:
             raise HTTPException(
@@ -116,9 +123,42 @@ class RequestsService():
         return created_request
     
     async def update_request_by_ID(self, id: PyObjectId, update_request: UpdateRequest, user_requesting: User) -> RequestRetrieved:
-        #If the user is admin
-        # if request is account_creation
-        # send email to the user requesting the account creation
+
+        role_user = user_requesting.role
         
-        return
+        current_request = await self.get_request_by_ID(id)
+        
+        updated_request_dict = jsonable_encoder(update_request, exclude_none = True)
+        
+        if current_request.type == TypeRequest.account_creation:
+            if role_user == Roles.employee:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="You are not authorized to update this request."
+                )
+        
+            if current_request.state != StateRequest.pending:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="This request is not pending."
+                )
+                
+            updated_request_dict["description"] = "Request updated with the state: " + updated_request_dict["state"] + " and processed by: " + user_requesting.email
+        
+        updated_request_dict["proccessed_by"] = user_requesting.id
+       
+        updated_request = self.requests_collection.find_one_and_update(
+            {"_id": id},
+            {"$set": updated_request_dict},
+            return_document=ReturnDocument.AFTER
+        )
+        
+        if updated_request["state"] != StateRequest.pending and updated_request["type"] == TypeRequest.account_creation:
+            print("Send email")
+            MailgunService().send_email_account_creation_state(updated_request["email"], "User", updated_request["state"])
+        
+        
+        # If the user is admin or dev or employee
+        # and the request is different from account_creation he can update the request
+        return RequestRetrieved(**updated_request)
         

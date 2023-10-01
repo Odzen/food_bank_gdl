@@ -37,7 +37,6 @@ class CreateUser(BaseModel):
 class UserRetrieved(User):
     model_config = ConfigDict(exclude={'password'})
     
-    
 class UpdateUser(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
