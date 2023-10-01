@@ -1,16 +1,16 @@
 from bson import ObjectId
 from datetime import datetime
-from pydantic import ConfigDict, BaseModel, Field
+from pydantic import ConfigDict, BaseModel, Field, EmailStr
 from typing import Optional
 from datetime import datetime
 from src.models.requests import TypeRequest, StateRequest, Request
 
 class CreateRequest(BaseModel):
     type: TypeRequest
-    state: StateRequest
-    email: Optional[str]
-    title: Optional[str]
-    description: Optional[str]
+    state: StateRequest = Field(default=StateRequest.pending)
+    email: Optional[EmailStr] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
     
     created_at: datetime = Field(default_factory = datetime.now)
     updated_at: datetime = Field(default_factory = datetime.now)
