@@ -17,11 +17,10 @@ class CreateUser(BaseModel):
     created_at: datetime = Field(default_factory = datetime.now)
     updated_at: datetime = Field(default_factory = datetime.now)
 
-    class config:
-        populate_by_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-        fields = {'id': '_id'}
+    model_config = ConfigDict(
+        populate_by_name = True,
+        arbitrary_types_allowed = True,
+        json_encoders = {ObjectId: str},
         json_schema_extra = {
                 "example": {
                     "first_name": "Harry",
@@ -33,11 +32,10 @@ class CreateUser(BaseModel):
                     "created_at": "2023-01-10T18:16:44.595096",
                     "updated_at": "2023-01-10T18:16:44.595096"
             }
-        }
+        })
 
 class UserRetrieved(User):
     model_config = ConfigDict(exclude={'password'})
-    
     
 class UpdateUser(BaseModel):
     first_name: Optional[str] = None
@@ -47,6 +45,4 @@ class UpdateUser(BaseModel):
     identification: Optional[str] = None
     
     updated_at: datetime = Field(default_factory = datetime.now)
-    # TODO[pydantic]: The following keys were removed: `json_encoders`.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
     model_config = ConfigDict(populate_by_name=True, json_encoders={ObjectId: str})

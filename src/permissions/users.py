@@ -60,6 +60,15 @@ def user_is_admin(user: User = Depends(get_user_from_access_token)):
 
     return user
 
+def user_is_admin_or_dev(user: User = Depends(get_user_from_access_token)):
+    if user.role != Roles.admin and user.role != Roles.developer:
+        raise HTTPException(
+            detail = "You need to be admin or dev to perform this action.",
+            status_code = status.HTTP_401_UNAUTHORIZED
+        )
+
+    return user
+
 def user_is_owner(
     user_id: PyObjectId, # Id of the user owner of the resource to be accesed
     user_from_token: User = Depends(get_user_from_access_token)

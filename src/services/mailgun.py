@@ -1,7 +1,8 @@
 from src.config.mailgun import mailgun_settings
-from src.schemas.mailgun import SendEmailBody, ResponseEmailSent
+from src.schemas.mailgun import SendEmailBody, ResponseEmailSent, AvailableTemplatesNames
 import json
 import requests
+from src.models.requests import StateRequest
 
 class MailgunService():
 
@@ -29,3 +30,30 @@ class MailgunService():
         except Exception as e:
             raise e
     
+    def send_email_account_creation_state(self, recipient_email: str, recipient_name: str, state: StateRequest) -> ResponseEmailSent:
+
+        recipient_name = "User"
+        recipient_email = recipient_email
+        subject = "Cambio de estado solicitud de creación de cuenta"
+        template = AvailableTemplatesNames.notification_user_auth
+        
+        if state == StateRequest.approved:
+            request_state = "Aprobada"
+        elif state == StateRequest.rejected:
+            request_state = "Rechazada"
+        
+        variables = {
+            "request-state": request_state
+        }
+        
+        email_to_send = SendEmailBody(
+            recipient_name = recipient_name,
+            recipient_email = recipient_email,
+            subject = subject,
+            template = template,
+            variables = variables
+        )
+        
+        response = self.send_template_email(email_to_send)
+        
+        return response

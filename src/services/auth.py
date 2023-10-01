@@ -6,6 +6,8 @@ from src.utils.cryptography import (
     create_access_token, verify_password
 )
 from typing import Tuple
+from datetime import datetime
+from pymongo import ReturnDocument
 
 class AuthService():
     
@@ -30,6 +32,14 @@ class AuthService():
                 headers = {"WWW-Authenticate": "Bearer"}
             )
 
-        access_token =  create_access_token(user.id, user.email)
+        access_token = create_access_token(user.id, user.email)
         
-        return user, access_token
+        today = datetime.now()
+        
+        updated_user = self.users_collection.find_one_and_update(
+            {"_id": user.id},
+            {"$set": {"last_login": str(today)}},
+            return_document= ReturnDocument.AFTER
+        )
+        
+        return User(**updated_user), access_token
