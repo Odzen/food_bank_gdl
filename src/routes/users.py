@@ -1,6 +1,6 @@
 from src.schemas.users import UserRetrieved, UpdateUser, CreateUser
 from src.services.users import UserService, Roles
-from fastapi import APIRouter, Body, status, Depends
+from fastapi import APIRouter, Body, status, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi_pagination import Page, paginate
@@ -25,7 +25,7 @@ async def retrieve_user_by_id(id: PyObjectId, user=Depends(user_is_dev)):
     )
 
 
-@router.get("/users", response_model=Page[dict], tags=["users"])
+@router.get("/users", response_model=Page[dict], dependencies=[Depends(get_user_from_access_token)], tags=["users"])
 async def list_all_users(email: EmailStr = None, role: Roles = None):
     users = []
 
@@ -54,16 +54,23 @@ async def update_user_by_ID(user_id: PyObjectId, user=Depends(get_user_from_acce
     
 @router.post("/users", response_model=UserRetrieved, tags=["auth"])
 async def signup(user=Depends(get_optional_user_from_access_token), user_to_create: CreateUser = Body()):
-
+    
     if user:
         user_roles_checks(user_action=user_to_create, user=user)
     
         user = UserService().create(user_to_create=user_to_create, user_id_creator=user.id)
-
-    user = UserService().create(user_to_create=user_to_create)
-    
-    user_json = jsonable_encoder(user)
-    user = UserRetrieved(**user_json)
+        
+    else:
+        if user_to_create.role:
+            raise HTTPException(
+                detail = "You can't create a user with a role.",
+                status_code = status.HTTP_401_UNAUTHORIZED
+            )
+        
+        user = UserService().create(user_to_create=user_to_create)
+        
+        user_json = jsonable_encoder(user)
+        user = UserRetrieved(**user_json)
 
     return JSONResponse(
         content = {
