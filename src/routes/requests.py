@@ -62,7 +62,9 @@ async def auth_request(email: EmailStr = Body(embed=True)):
 @router.patch("/requests/{request_id}", response_model = RequestRetrieved, 
               tags = ["request"],
               description="Endpoint to update a request by ID. Only developers and admins can perform this action.")
-async def update_request_by_ID(request_id: PyObjectId, user_requesting=Depends(user_is_admin_or_dev), updated_request: UpdateRequest = Body()):
+async def update_request_by_ID(request_id: PyObjectId, 
+                               user_requesting=Depends(user_is_admin_or_dev),
+                               updated_request: UpdateRequest = Body()):
     
     updated_request = await RequestsService().update_request_by_ID(request_id, updated_request, user_requesting)
 
