@@ -61,9 +61,9 @@ async def signup(user=Depends(get_optional_user_from_access_token), user_to_crea
         user = UserService().create(user_to_create=user_to_create, user_id_creator=user.id)
         
     else:
-        if user_to_create.role:
+        if user_to_create.role != Roles.employee:
             raise HTTPException(
-                detail = "You can't create a user with a role.",
+                detail = f"If you're not logged you can't create a user with a role different of {Roles.employee}",
                 status_code = status.HTTP_401_UNAUTHORIZED
             )
         
