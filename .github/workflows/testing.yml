@@ -9,7 +9,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+
+  create-envfile:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Make envfile
+          uses: SpicyPizza/create-envfile@v2.0
+          with:
+            envkey_DEBUG: false
+            envkey_DB_CLUSTER_DOMAIN: ${{ secrets.DB_CLUSTER_DOMAIN }}
+            envkey_DB_NAME: ${{ secrets.DB_NAME }}
+            envkey_DB_USERNAME: ${{ secrets.DB_USERNAME }}
+            envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            envkey_JWT_ADMIN_TOKEN: ${{ secrets.JWT_ADMIN_TOKEN }}
+            envkey_JWT_DEV_TOKEN: ${{ secrets.JWT_DEV_TOKEN }}
+            envkey_JWT_EMPLOYEE_TOKEN: ${{ secrets.JWT_EMPLOYEE_TOKEN }}
+            envkey_MAILGUN_API_URL: ${{ secrets.MAILGUN_API_URL }}
+            envkey_MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+            envkey_MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
+            envkey_MAILGUN_FROM: ${{ secrets.MAILGUN_FROM }}
+            envkey_stage: ${{ secrets.stage }}
+            some_other_variable: foobar
+            directory: ../../
+            file_name: .env
+            fail_on_empty: false
+            sort_keys: false
+
+  testing:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -23,7 +49,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-          check-latest: true 
+          check-latest: true
 
       - name: Install pip
         run: python -m pip install --upgrade pip
