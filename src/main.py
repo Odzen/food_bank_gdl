@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
+from fastapi.testclient import TestClient
 
 from src.routes import (
     users, auth, mailgun, requests
@@ -15,6 +16,8 @@ print("STAGE: ", stage)
 title = f"Food bank API -- {stage}"
 
 app = FastAPI(title=title)
+
+testing_client = TestClient(app)
 
 app.include_router(auth.router)
 app.include_router(users.router)
