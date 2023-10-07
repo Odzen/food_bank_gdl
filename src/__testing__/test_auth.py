@@ -1,4 +1,5 @@
 from src.main import testing_client
+from src.config.jwt import jwt_settings
 
 def test_read_login_fail_schema():
     response = testing_client.post(
@@ -39,6 +40,22 @@ def test_read_login_fail_credentials():
         "/login/",
         json={"username": "juan@mail.com", "password": "12546"},
     )
-    print(response.json())
-    assert response.status_code == 422
-    assert "value is not a valid email address" in response.json()["detail"][0]["msg"]
+    assert response.status_code == 404
+    assert "doesn't exist" in response.json()["detail"]
+    
+def test_read_login():
+    response = testing_client.post(
+        "/login/",
+        json={"username": "juan.velasquez.acevedo@correounivalle.edu.co", "password": "password"},
+    )
+    assert response.status_code == 200
+    
+def test_me():
+    # Bearer token in header
+    headers = {"Authorization": f"Bearer {jwt_settings.jwt_admin_token}"}
+    response = testing_client.get(
+        "/me/",
+        headers=headers  # Pasar los encabezados como un diccionario
+    )
+    
+    assert response.status_code == 200
