@@ -37,6 +37,7 @@ jobs:
 
   testing:
     runs-on: ubuntu-latest
+    depends-on: create-envfile
     timeout-minutes: 10
     steps:
 
