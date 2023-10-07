@@ -1,4 +1,4 @@
-name: Deploy to AWS Elastic Beanstalk
+name: Unit tests
 
 # on Pull Reques to main or dev
 
