@@ -12,7 +12,6 @@ class CreateTicket(BaseModel):
     urgency: UrgencyTicketEnum
     state: StateTicketEnum = Field(default=StateTicketEnum.pending)
     
-    created_by: PyObjectId
     assigned_to: Optional[PyObjectId] | None = None
 
     created_at: datetime = Field(default_factory = datetime.now)

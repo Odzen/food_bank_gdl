@@ -2,8 +2,9 @@ from pydantic import BaseModel, Field, ConfigDict
 from enum import Enum
 from src.models import PyObjectId
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from bson import ObjectId
+from src.models.images import NestedImage
 
 class UrgencyTicketEnum(str, Enum):
     high = "high"
@@ -24,11 +25,12 @@ class Ticket(BaseModel):
     
     urgency: UrgencyTicketEnum
     state: StateTicketEnum
+    images: Optional[List[NestedImage]] = Field(default_factory=list)
     
     created_by: PyObjectId
     assigned_to: Optional[PyObjectId] | None = None
     
-    time_solved: Optional[datetime]
+    time_solved: Optional[datetime] = None
 
     created_at: datetime
     updated_at: datetime
