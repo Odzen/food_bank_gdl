@@ -4,7 +4,7 @@ from fastapi_pagination import add_pagination
 from fastapi.testclient import TestClient
 
 from src.routes import (
-    users, auth, mailgun, requests
+    users, auth, mailgun, requests, tickets, images
 )
 
 import os
@@ -23,6 +23,8 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(mailgun.router)
 app.include_router(requests.router)
+app.include_router(tickets.router)
+app.include_router(images.router)
 
 app.add_middleware(
     CORSMiddleware,
