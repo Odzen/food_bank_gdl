@@ -1,14 +1,15 @@
 from src.config.db import db
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, UploadFile
 from typing import List
 from src.schemas.tickets import TicketRetrieved, CreateTicket, UpdateTicket
 from src.models import PyObjectId
-from src.schemas.users import Roles
 from src.models.users import User
 from fastapi.encoders import jsonable_encoder
 from src.services.users import UserService
 from pymongo import ReturnDocument
 from src.services.mailgun import MailgunService
+from src.schemas.images import FolderImages
+from src.services.images import ImageService
 
 class TicketsService():
     def __init__(self):
@@ -88,4 +89,30 @@ class TicketsService():
         
         
         return TicketRetrieved(**update_ticket)
+    
+
+    async def upload_ticket_images(self, ticket_images: List[UploadFile],   ticket_id: PyObjectId) -> TicketRetrieved:
+        new_ticket_images = await ImageService().upload_images(images=ticket_images, folder=FolderImages.tickets_pictures)
+
+        for new_ticket_image in new_ticket_images:
+    
+            new_image_data = {
+                "uploaded_image_id": new_ticket_image.id,
+                "url": new_ticket_image.url,
+                "content_type": new_ticket_image.content_type
+            }
+            
+            updated_ticket = self.tickets_collection.find_one_and_update(
+                {"_id": ticket_id},
+                {"$push": {"images": new_image_data}},
+                return_document=ReturnDocument.AFTER
+            )
+            
+            if not updated_ticket:
+                raise HTTPException(
+                    detail=f"Ticket with the id={ticket_id} doesn't exist",
+                    status_code=status.HTTP_409_CONFLICT
+                )
+        
+        return TicketRetrieved(**updated_ticket)
     

@@ -1,4 +1,4 @@
-from src.permissions.users import get_user_from_access_token, user_is_dev
+from src.permissions.users import user_is_dev
 from src.schemas.images import ImageRetrieved
 from src.services.images import ImageService
 from fastapi import APIRouter, Depends, UploadFile, status

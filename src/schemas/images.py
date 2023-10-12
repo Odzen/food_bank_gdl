@@ -5,7 +5,7 @@ from enum import Enum
 from pydantic import ConfigDict
 
 class FolderImages(str, Enum):
-    profile_pictures = "tickets_pictures"
+    tickets_pictures = "tickets_pictures"
     none = None
 
 class ImageRetrieved(Image):
