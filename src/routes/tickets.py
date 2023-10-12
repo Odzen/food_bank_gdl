@@ -44,7 +44,7 @@ async def create_ticket(ticket_to_create: CreateTicket = Body(), user: User = De
 
     
 @router.patch("/tickets/{ticket_id}", response_model = TicketRetrieved, 
-              tags = ["ticket"],
+              tags = ["tickets"],
               description="Endpoint to update a ticket by ID. Only creators of the ticket can perform this action or admins.")
 async def update_ticket_by_Id(ticket_id: PyObjectId, 
                                user_ticketing=Depends(get_user_from_access_token),
