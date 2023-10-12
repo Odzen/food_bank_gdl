@@ -1,13 +1,13 @@
 from src.schemas.tickets import CreateTicket, TicketRetrieved, UpdateTicket
 from src.services.tickets import TicketsService
-from fastapi import APIRouter, Body, status, Depends, HTTPException
+from fastapi import APIRouter, Body, status, Depends, UploadFile
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from pydantic import EmailStr
 from fastapi_pagination import Page, paginate
 from src.models import PyObjectId
 from src.models.users import User
-from src.permissions.users import get_user_from_access_token, user_is_admin_or_dev
+from src.permissions.users import get_user_from_access_token
+from typing import List
 
 
 router = APIRouter()
@@ -55,4 +55,16 @@ async def update_ticket_by_Id(ticket_id: PyObjectId,
     return JSONResponse(
         content=jsonable_encoder(updated_ticket),
         status_code=status.HTTP_200_OK
+    )
+    
+@router.post("/tickets/{ticket_id}/images", response_model=TicketRetrieved, tags=["tickets"],
+    dependencies = [Depends(get_user_from_access_token)],
+    description="Upload ticket images to the media storage",
+)
+async def upload_client_logo(ticket_images: List[UploadFile], ticket_id: PyObjectId):
+    updated_ticket = await TicketsService().upload_ticket_images(ticket_images, ticket_id )
+
+    return JSONResponse(
+        content = jsonable_encoder(updated_ticket),
+        status_code = status.HTTP_200_OK
     )
