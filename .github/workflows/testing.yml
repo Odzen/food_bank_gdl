@@ -36,6 +36,8 @@ jobs:
             envkey_MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
             envkey_MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
             envkey_MAILGUN_FROM: ${{ secrets.MAILGUN_FROM }}
+            envkey_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            envkey_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             envkey_stage: ${{ secrets.stage }}
             file_name: .env
             fail_on_empty: false
