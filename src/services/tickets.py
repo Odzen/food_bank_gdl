@@ -10,6 +10,8 @@ from pymongo import ReturnDocument
 from src.services.mailgun import MailgunService
 from src.schemas.images import FolderImages
 from src.services.images import ImageService
+from src.schemas.mailgun import AvailableTemplatesNames, SendEmailBody, ResponseEmailSent
+from bson import ObjectId
 
 class TicketsService():
     def __init__(self):
@@ -60,7 +62,7 @@ class TicketsService():
         
         ticket = await self.get_ticket_by_Id(ticket_id)
         
-        # Send notification
+        # Send notification by email
         if ticket.assigned_to:
             user_assigned = UserService().get_user_by_ID(ticket.assigned_to)
             
@@ -73,7 +75,7 @@ class TicketsService():
         updated_ticket_dict = jsonable_encoder(update_ticket, exclude_none = True)
         
         if updated_ticket_dict["assigned_to"]:
-            updated_ticket_dict["assigned_to"] = PyObjectId(updated_ticket_dict["assigned_to"])
+            updated_ticket_dict["assigned_to"] = ObjectId(updated_ticket_dict["assigned_to"])
        
         updated_ticket = self.tickets_collection.find_one_and_update(
             {"_id": id},
@@ -87,17 +89,34 @@ class TicketsService():
                 detail="Ticket doesn't exist. Wrong ID."
             )
         
-        # Send notification
+        # Send notification by email
         if updated_ticket_dict["assigned_to"]:
             user_assigned = UserService().get_user_by_ID(updated_ticket_dict["assigned_to"])
             
             self._send_email_to_assigned_user(user_assigned.email, user_assigned.first_name, updated_ticket["title"])
         
-        return TicketRetrieved(**update_ticket)
+        return TicketRetrieved(**updated_ticket)
     
-    def _send_email_to_assigned_user(self, user_email: str, user_name: str, title_ticket: str):
-        pass
-    # MailgunService().send_mail(user_assigned.email, "You have been assigned to a ticket", "You have been assigned to a ticket")
+    def _send_email_to_assigned_user(self, user_email: str, user_name: str, title_ticket: str) -> ResponseEmailSent:
+
+            subject = "¡Haz sido asignado a un ticket!"
+            template = AvailableTemplatesNames.notify_tickets
+            variables = {
+                "name": user_name,
+                "title": title_ticket
+            }
+            
+            email_to_send = SendEmailBody(
+                recipient_name = user_name,
+                recipient_email = user_email,
+                subject = subject,
+                template = template,
+                variables = variables
+            )
+            
+            response = MailgunService().send_template_email(email_to_send)
+            
+            return response
     
 
     async def upload_ticket_images(self, ticket_images: List[UploadFile],   ticket_id: PyObjectId) -> TicketRetrieved:
