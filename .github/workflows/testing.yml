@@ -33,8 +33,10 @@ jobs:
             fail_on_empty: false
             sort_keys: false
 
-        - name: Cd .
-          run: cd .
+        - name: Cd y Ls
+          run: |
+            cd ${{ github.workspace }}
+            ls -al .
           
         - name: Ls
           run: ls -al .
