@@ -16,17 +16,17 @@ jobs:
         - name: Make envfile with echo
           run: |
             echo "${{ secrets.DB_CLUSTER_DOMAIN }}" > .env
-            echo "${{ secrets.DB_NAME }}" >> .env
-            echo "${{ secrets.DB_USERNAME }}" >> .env
-            echo "${{ secrets.DB_PASSWORD }}" >> .env
-            echo "${{ secrets.JWT_ADMIN_TOKEN }}" >> .env
-            echo "${{ secrets.JWT_DEV_TOKEN }}" >> .env
-            echo "${{ secrets.JWT_EMPLOYEE_TOKEN }}" >> .env
-            echo "${{ secrets.MAILGUN_API_URL }}" >> .env
-            echo "${{ secrets.MAILGUN_API_KEY }}" >> .env
-            echo "${{ secrets.MAILGUN_DOMAIN }}" >> .env
-            echo "${{ secrets.MAILGUN_FROM }}" >> .env
-            echo "${{ secrets.stage }}" >> .env
+            echo "${{ secrets.DB_NAME }}" > .env
+            echo "${{ secrets.DB_USERNAME }}" > .env
+            echo "${{ secrets.DB_PASSWORD }}" > .env
+            echo "${{ secrets.JWT_ADMIN_TOKEN }}" > .env
+            echo "${{ secrets.JWT_DEV_TOKEN }}" > .env
+            echo "${{ secrets.JWT_EMPLOYEE_TOKEN }}" > .env
+            echo "${{ secrets.MAILGUN_API_URL }}" > .env
+            echo "${{ secrets.MAILGUN_API_KEY }}" > .env
+            echo "${{ secrets.MAILGUN_DOMAIN }}" > .env
+            echo "${{ secrets.MAILGUN_FROM }}" > .env
+            echo "${{ secrets.stage }}" > .env
 
   check-envfile:
     runs-on: ubuntu-latest
