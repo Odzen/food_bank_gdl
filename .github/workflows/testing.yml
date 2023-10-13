@@ -33,8 +33,8 @@ jobs:
     needs:  [create-envfile]
     steps:
       - name: Check all content with ls
-        run: ls .
-
+        run: ls -a
+      
   testing:
     runs-on: ubuntu-latest
     needs:  [create-envfile]
