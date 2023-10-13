@@ -3,13 +3,15 @@ from fastapi import HTTPException, status, UploadFile
 from typing import List
 from src.schemas.tickets import TicketRetrieved, CreateTicket, UpdateTicket
 from src.models import PyObjectId
-from src.models.users import User
+from src.models.users import User, Roles
 from fastapi.encoders import jsonable_encoder
 from src.services.users import UserService
 from pymongo import ReturnDocument
 from src.services.mailgun import MailgunService
 from src.schemas.images import FolderImages
 from src.services.images import ImageService
+from src.schemas.mailgun import AvailableTemplatesNames, SendEmailBody, ResponseEmailSent
+from bson import ObjectId
 
 class TicketsService():
     def __init__(self):
@@ -59,15 +61,26 @@ class TicketsService():
         ticket_id = inserted_ticket.inserted_id
         
         ticket = await self.get_ticket_by_Id(ticket_id)
+        
+        # Send notification by email
+        if ticket.assigned_to:
+            user_assigned = UserService().get_user_by_ID(ticket.assigned_to)
+            
+            self._send_email_to_assigned_user(user_assigned.email, user_assigned.first_name, ticket.title)
 
         return ticket
     
     async def update_ticket_by_Id(self, id: PyObjectId, update_ticket: UpdateTicket, user_requesting: User) -> TicketRetrieved:
-
-        updated_ticket_dict = jsonable_encoder(update_ticket, exclude_none = True)
         
-        if updated_ticket_dict["assigned_to"]:
-            updated_ticket_dict["assigned_to"] = PyObjectId(updated_ticket_dict["assigned_to"])
+        current_ticket = await self.get_ticket_by_Id(id)
+        
+        if user_requesting.role == Roles.employee and (current_ticket.assigned_to != user_requesting.id or current_ticket.created_by != user_requesting.id):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Employees are allowed to update only the tickets that they own or the ones that they're assigned to."
+            )
+        
+        updated_ticket_dict = jsonable_encoder(update_ticket, exclude_none = True)
        
         updated_ticket = self.tickets_collection.find_one_and_update(
             {"_id": id},
@@ -81,14 +94,40 @@ class TicketsService():
                 detail="Ticket doesn't exist. Wrong ID."
             )
             
-        if updated_ticket_dict["assigned_to"]:
-            user_assigned = UserService().get_user_by_ID(updated_ticket_dict["assigned_to"])
-            print("User assigned: ", user_assigned)
-            print("Send email to: ", user_assigned.email)
-            # MailgunService().send_mail(user_assigned.email, "You have been assigned to a ticket", "You have been assigned to a ticket")
+        ticket_retrieved = TicketRetrieved(**updated_ticket)
         
+        # Send notification by email
+        if ticket_retrieved.assigned_to:
+            user_assigned = UserService().get_user_by_ID(ticket_retrieved.assigned_to)
+            
+            self._send_email_to_assigned_user(user_assigned.email, user_assigned.first_name, ticket_retrieved.title)
         
-        return TicketRetrieved(**update_ticket)
+        return ticket_retrieved
+    
+    def _send_email_to_assigned_user(self, user_email: str, user_name: str, title_ticket: str) -> ResponseEmailSent:
+
+            subject = "¡Haz sido asignado a un ticket!"
+            template = AvailableTemplatesNames.notify_tickets
+            variables = {
+                "name": user_name,
+                "title": title_ticket
+            }
+            
+            email_to_send = SendEmailBody(
+                recipient_name = user_name,
+                recipient_email = user_email,
+                subject = subject,
+                template = template,
+                variables = variables
+            )
+            
+            print("Email to send: ", email_to_send)
+            
+            response = MailgunService().send_template_email(email_to_send)
+            
+            print("Response: ", response)
+            
+            return response
     
 
     async def upload_ticket_images(self, ticket_images: List[UploadFile],   ticket_id: PyObjectId) -> TicketRetrieved:
