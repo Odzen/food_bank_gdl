@@ -33,7 +33,10 @@ jobs:
             fail_on_empty: false
             sort_keys: false
 
-        - name: List Files
+        - name: Cd .
+          run: cd .
+          
+        - name: Ls
           run: ls -al .
 
         - name: Check .env content
