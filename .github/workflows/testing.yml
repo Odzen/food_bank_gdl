@@ -27,6 +27,8 @@ jobs:
             envkey_DB_NAME: ${{ secrets.DB_NAME }}
             envkey_DB_USERNAME: ${{ secrets.DB_USERNAME }}
             envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            envkey_JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+            envkey_JWT_ENCODING_ALGORITHM: ${{ secrets.JWT_ENCODING_ALGORITHM }}
             envkey_JWT_ADMIN_TOKEN: ${{ secrets.JWT_ADMIN_TOKEN }}
             envkey_JWT_DEV_TOKEN: ${{ secrets.JWT_DEV_TOKEN }}
             envkey_JWT_EMPLOYEE_TOKEN: ${{ secrets.JWT_EMPLOYEE_TOKEN }}
