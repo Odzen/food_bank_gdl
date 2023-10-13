@@ -59,6 +59,12 @@ class TicketsService():
         ticket_id = inserted_ticket.inserted_id
         
         ticket = await self.get_ticket_by_Id(ticket_id)
+        
+        # Send notification
+        if ticket.assigned_to:
+            user_assigned = UserService().get_user_by_ID(ticket.assigned_to)
+            
+            self._send_email_to_assigned_user(user_assigned.email, user_assigned.first_name, ticket.title)
 
         return ticket
     
@@ -80,15 +86,18 @@ class TicketsService():
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Ticket doesn't exist. Wrong ID."
             )
-            
+        
+        # Send notification
         if updated_ticket_dict["assigned_to"]:
             user_assigned = UserService().get_user_by_ID(updated_ticket_dict["assigned_to"])
-            print("User assigned: ", user_assigned)
-            print("Send email to: ", user_assigned.email)
-            # MailgunService().send_mail(user_assigned.email, "You have been assigned to a ticket", "You have been assigned to a ticket")
-        
+            
+            self._send_email_to_assigned_user(user_assigned.email, user_assigned.first_name, updated_ticket["title"])
         
         return TicketRetrieved(**update_ticket)
+    
+    def _send_email_to_assigned_user(self, user_email: str, user_name: str, title_ticket: str):
+        pass
+    # MailgunService().send_mail(user_assigned.email, "You have been assigned to a ticket", "You have been assigned to a ticket")
     
 
     async def upload_ticket_images(self, ticket_images: List[UploadFile],   ticket_id: PyObjectId) -> TicketRetrieved:
