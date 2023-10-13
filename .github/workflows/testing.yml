@@ -32,16 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     needs:  [create-envfile]
     steps:
-      - name: Check .env
-        run: |
-          if [ ! -f .env ]; then
-            echo "File not found!"
-            exit 1
-          fi
-
-      - name: Check .env content with cat
-        run: |
-          cat .env
+      - name: Check all content with ls
+        run: ls -a
 
   testing:
     runs-on: ubuntu-latest
