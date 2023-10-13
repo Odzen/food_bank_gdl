@@ -34,7 +34,7 @@ jobs:
             sort_keys: false
 
         - name: List Files
-          run: ls -al ../../food_bank_gdl
+          run: ls -al .
 
         - name: Check .env content
           run: cat .env
