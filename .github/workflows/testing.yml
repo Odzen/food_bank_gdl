@@ -35,7 +35,7 @@ jobs:
             fail_on_empty: false
             sort_keys: false
 
-  create-envfile:
+  check-envfile:
     runs-on: ubuntu-latest
     steps:
       - name: Check .env
