@@ -37,6 +37,7 @@ jobs:
 
   check-envfile:
     runs-on: ubuntu-latest
+    needs:  [create-envfile]
     steps:
       - name: Check .env
         run: |
