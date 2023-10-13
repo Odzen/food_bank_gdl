@@ -33,6 +33,9 @@ jobs:
             fail_on_empty: false
             sort_keys: false
 
+        - name: List Files
+          run: ls -al
+
   testing:
     runs-on: ubuntu-latest
     needs:  [create-envfile]
