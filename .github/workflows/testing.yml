@@ -1,7 +1,5 @@
 name: Unit tests
 
-# on Pull Reques to main or dev
-
 on: push
 
 concurrency:
@@ -9,8 +7,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-  create-envfile:
+  unit-testing:
     runs-on: ubuntu-latest
     steps:
 
