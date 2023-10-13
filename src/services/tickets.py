@@ -3,7 +3,7 @@ from fastapi import HTTPException, status, UploadFile
 from typing import List
 from src.schemas.tickets import TicketRetrieved, CreateTicket, UpdateTicket
 from src.models import PyObjectId
-from src.models.users import User
+from src.models.users import User, Roles
 from fastapi.encoders import jsonable_encoder
 from src.services.users import UserService
 from pymongo import ReturnDocument
@@ -71,11 +71,16 @@ class TicketsService():
         return ticket
     
     async def update_ticket_by_Id(self, id: PyObjectId, update_ticket: UpdateTicket, user_requesting: User) -> TicketRetrieved:
-
-        updated_ticket_dict = jsonable_encoder(update_ticket, exclude_none = True)
         
-        if updated_ticket_dict["assigned_to"]:
-            updated_ticket_dict["assigned_to"] = ObjectId(updated_ticket_dict["assigned_to"])
+        current_ticket = await self.get_ticket_by_Id(id)
+        
+        if user_requesting.role == Roles.employee and (current_ticket.assigned_to != user_requesting.id or current_ticket.created_by != user_requesting.id):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Employees are allowed to update only the tickets that they own or the ones that they're assigned to."
+            )
+        
+        updated_ticket_dict = jsonable_encoder(update_ticket, exclude_none = True)
        
         updated_ticket = self.tickets_collection.find_one_and_update(
             {"_id": id},
@@ -88,14 +93,16 @@ class TicketsService():
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Ticket doesn't exist. Wrong ID."
             )
+            
+        ticket_retrieved = TicketRetrieved(**updated_ticket)
         
         # Send notification by email
-        if updated_ticket_dict["assigned_to"]:
-            user_assigned = UserService().get_user_by_ID(updated_ticket_dict["assigned_to"])
+        if ticket_retrieved.assigned_to:
+            user_assigned = UserService().get_user_by_ID(ticket_retrieved.assigned_to)
             
-            self._send_email_to_assigned_user(user_assigned.email, user_assigned.first_name, updated_ticket["title"])
+            self._send_email_to_assigned_user(user_assigned.email, user_assigned.first_name, ticket_retrieved.title)
         
-        return TicketRetrieved(**updated_ticket)
+        return ticket_retrieved
     
     def _send_email_to_assigned_user(self, user_email: str, user_name: str, title_ticket: str) -> ResponseEmailSent:
 
@@ -114,7 +121,11 @@ class TicketsService():
                 variables = variables
             )
             
+            print("Email to send: ", email_to_send)
+            
             response = MailgunService().send_template_email(email_to_send)
+            
+            print("Response: ", response)
             
             return response
     
