@@ -1,7 +1,5 @@
 name: Unit tests
 
-# on Pull Reques to main or dev
-
 on: push
 
 concurrency:
@@ -9,10 +7,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-  create-envfile:
+  unit-testing:
     runs-on: ubuntu-latest
     steps:
+
+        - name: Checkout
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+
         - name: Make envfile
           uses: SpicyPizza/create-envfile@v2.0
           with:
@@ -21,6 +24,8 @@ jobs:
             envkey_DB_NAME: ${{ secrets.DB_NAME }}
             envkey_DB_USERNAME: ${{ secrets.DB_USERNAME }}
             envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            envkey_JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+            envkey_JWT_ENCODING_ALGORITHM: ${{ secrets.JWT_ENCODING_ALGORITHM }}
             envkey_JWT_ADMIN_TOKEN: ${{ secrets.JWT_ADMIN_TOKEN }}
             envkey_JWT_DEV_TOKEN: ${{ secrets.JWT_DEV_TOKEN }}
             envkey_JWT_EMPLOYEE_TOKEN: ${{ secrets.JWT_EMPLOYEE_TOKEN }}
@@ -28,35 +33,24 @@ jobs:
             envkey_MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
             envkey_MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
             envkey_MAILGUN_FROM: ${{ secrets.MAILGUN_FROM }}
+            envkey_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            envkey_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             envkey_stage: ${{ secrets.stage }}
-            some_other_variable: foobar
-            directory: ../../
             file_name: .env
             fail_on_empty: false
             sort_keys: false
 
-  testing:
-    runs-on: ubuntu-latest
-    depends-on: create-envfile
-    timeout-minutes: 10
-    steps:
+        - name: Install Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.10'
+            check-latest: true
 
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        - name: Install pip
+          run: python -m pip install --upgrade pip
 
-      - name: Install Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-          check-latest: true
+        - name: Install dependencies
+          run: pip install -r requirements.txt          
 
-      - name: Install pip
-        run: python -m pip install --upgrade pip
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt          
-
-      - name: Test with pytest
-        run: pytest
+        - name: Test with pytest
+          run: pytest
