@@ -26,6 +26,7 @@ class Ticket(BaseModel):
     urgency: UrgencyTicketEnum
     state: StateTicketEnum
     images: Optional[List[NestedImage]] = Field(default_factory=list)
+    category: Optional[str] | None = None
     
     created_by: PyObjectId
     assigned_to: Optional[PyObjectId] | None = None
@@ -40,6 +41,7 @@ class Ticket(BaseModel):
             "_id": "6adjq9q39dsf211",
             "title:": "No enough food",
             "description": "We need more food",
+            "category": "new category",
             "urgency": "high",
             "state": "pending",
             "created_by": "6adjq9q39dsf212",

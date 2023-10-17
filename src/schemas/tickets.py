@@ -11,6 +11,7 @@ class CreateTicket(BaseModel):
     
     urgency: UrgencyTicketEnum
     state: StateTicketEnum = Field(default=StateTicketEnum.pending)
+    category: Optional[str]
     
     assigned_to: Optional[PyObjectId] | None = None
 
@@ -19,16 +20,11 @@ class CreateTicket(BaseModel):
     
     model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True, json_encoders={ObjectId: str}, json_schema_extra={
         "example": {
-            "_id": "6adjq9q39dsf211",
             "title:": "No enough food",
             "description": "We need more food",
+            "category": "new category",
             "urgency": "high",
-            "state": "pending",
-            "created_by": "6adjq9q39dsf212",
-            "assigned_to": "6adjq9q39dsf211",
-            "time_solved": "2023-01-10T18:16:44.595092",
-            "created_at": "2023-01-10T18:16:44.595096",
-            "updated_at": "2023-01-10T18:16:44.595096"
+            "assigned_to": "6adjq9q39dsf211"
         }
     })
 
@@ -41,6 +37,7 @@ class UpdateTicket(BaseModel):
     
     urgency: Optional[UrgencyTicketEnum] = None
     state: Optional[StateTicketEnum] = None
+    category: Optional[str] = None
     
     assigned_to: Optional[PyObjectId]= None
     
