@@ -11,7 +11,6 @@ from src.services.mailgun import MailgunService
 from src.schemas.images import FolderImages
 from src.services.images import ImageService
 from src.schemas.mailgun import AvailableTemplatesNames, SendEmailBody, ResponseEmailSent
-from bson import ObjectId
 
 class TicketsService():
     def __init__(self):
