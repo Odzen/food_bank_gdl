@@ -21,15 +21,10 @@ class CreateRequest(BaseModel):
         json_encoders={ObjectId: str},
         json_schema_extra={
             "example": {
-                "_id": "6adjq9q39dsf214",
                 "type": "account_creation",
                 "state": "pending",
                 "title": "Account creation for juan@mail.com",
-                "description": "juan@mail.com wants to create an account",
-                "created_by": "None",
-                "proccessed_by": "6adjq9q39dsf214",
-                "created_at": "2023-01-10T18:16:44.595096",
-                "updated_at": "2023-01-10T18:16:44.595096"
+                "description": "juan@mail.com wants to create an account"
             }
     })
     
