@@ -92,7 +92,7 @@ class UserService():
     def create(self, user_to_create: CreateUser, user_id_creator: PyObjectId | None = None) -> User:
         
         approved_request = self.requests_collection.find_one({"email": user_to_create.email, "type": TypeRequest.account_creation, "state": StateRequest.approved})
-
+        
         if not approved_request:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,

@@ -28,7 +28,7 @@ class Ticket(BaseModel):
     images: Optional[List[NestedImage]] = Field(default_factory=list)
     category: Optional[str] | None = None
     
-    created_by: PyObjectId
+    created_by: Optional[PyObjectId] | None = None
     assigned_to: Optional[PyObjectId] | None = None
     
     time_solved: Optional[datetime] = None
