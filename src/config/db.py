@@ -10,6 +10,7 @@ class DatabaseSettings(BaseSettings):
     db_name: str
     db_username: str
     db_password: str
+    db_local: bool
     model_config = SettingsConfigDict(env_file=env_file, extra='ignore')
 
 db_settings = None
@@ -18,13 +19,18 @@ try:
 except ValidationError as e:
     print(e)
 
-mongodb_uri = "mongodb+srv://{username}:{password}@{cluster_domain}/?retryWrites=true&w=majority".format(
-        username=parse.quote_plus(db_settings.db_username),
-        password=parse.quote_plus(db_settings.db_password),
-        cluster_domain = db_settings.db_cluster_domain
-)
+if db_settings.db_local:
+    mongodb_local_uri = "mongodb://localhost:27017"
 
-
-client = MongoClient(mongodb_uri, tlsCAFile=certifi.where())
+    client = MongoClient(mongodb_local_uri)
+    
+else:
+    mongodb_uri = "mongodb+srv://{username}:{password}@{cluster_domain}/?retryWrites=true&w=majority".format(
+            username=parse.quote_plus(db_settings.db_username),
+            password=parse.quote_plus(db_settings.db_password),
+            cluster_domain = db_settings.db_cluster_domain
+    )
+    
+    client = MongoClient(mongodb_uri, tlsCAFile=certifi.where())
 
 db = client[db_settings.db_name]
