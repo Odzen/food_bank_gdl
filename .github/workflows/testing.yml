@@ -21,6 +21,7 @@ jobs:
           with:
             envkey_DEBUG: false
             envkey_DB_CLUSTER_DOMAIN: ${{ secrets.DB_CLUSTER_DOMAIN }}
+            envkey_DB_LOCAL: ${{ secrets.DB_LOCAL }}
             envkey_DB_NAME: ${{ secrets.DB_NAME }}
             envkey_DB_USERNAME: ${{ secrets.DB_USERNAME }}
             envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
