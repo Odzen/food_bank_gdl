@@ -36,3 +36,25 @@ def test_request_create():
     )
     
     assert response.status_code == 200
+    
+    
+def list_all_requests():
+
+    headers = {"Authorization": f"Bearer {jwt_settings.jwt_admin_token}"}
+    
+    response = testing_client.get(
+        "/requests/",
+        headers=headers
+    )
+    
+    assert response.status_code == 200
+    
+def test_request_by_id():
+    # Bearer token in header
+    headers = {"Authorization": f"Bearer {jwt_settings.jwt_admin_token}"}
+    response = testing_client.get(
+        "/requests/6531e76fc7e8b449103d6afb",
+        headers=headers  # Pasar los encabezados como un diccionario
+    )
+    
+    assert response.status_code == 404

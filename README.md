@@ -8,3 +8,11 @@
 5. Run API: `uvicorn src.main:app --reload`
 6. Go to `http://127.0.0.1:8000/docs` to see the documentation on swagger.
 
+## To setup de Database
+Tha application works with MongoDB database, you can create your own instance in the cloud and follow the .env.example instructions to connect to it. Or run a local instance.
+
+If you want to populate the database with some data, you can run the `src/seed/seed.py` script using `python -m src.seed.seed`
+
+## To run the tests
+To run unit tests you can use `pytest` command.
+
