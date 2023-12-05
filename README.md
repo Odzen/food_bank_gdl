@@ -1,5 +1,5 @@
 # Server to Food Bank tickets mobile App
-Rest API that handles all the logic of tickets, users, and requests for administrative purposes of the (Food Bank - Guadalajara)[https://bdalimentos.org/]. The endpoints of this API aim to work with any client, a web or mobile application.
+Rest API that handles all the logic of tickets, users, and requests for administrative purposes of the [Food Bank - Guadalajara](https://bdalimentos.org/). The endpoints of this API aim to work with any client, a web or mobile application.
 
 ## To start
 1. Ask for `.env` variables, follow `.env.example` and create a local `.env` file with the correct values.
