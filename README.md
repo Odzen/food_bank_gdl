@@ -6,7 +6,7 @@ Rest API that handles all the logic of tickets, users, and requests for administ
 2. Create python env: `python -m venv env`
 3. Activate env: `source env/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
-5. Run API: `uvicorn src.main:app --reload`
+5. Run API: `fastapi dev src/main.py`
 6. Go to `http://127.0.0.1:8000/docs` to see the documentation on swagger.
 
 ## To setup de Database

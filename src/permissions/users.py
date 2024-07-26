@@ -1,14 +1,15 @@
 from bson import ObjectId
 from src.config.auth import oauth2_scheme, optional_oauth2_scheme
-from src.config.jwt import jwt_settings
+from src.config.jwt import get_settings as jwt_settings
 from src.models.users import User, Roles
 from src.services.users import UserService
 from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
 from src.models import PyObjectId
 
-SECRET_KEY = jwt_settings.jwt_secret_key
-JWT_ALGORITHM = jwt_settings.jwt_encoding_algorithm
+
+SECRET_KEY = jwt_settings().jwt_secret_key
+JWT_ALGORITHM = jwt_settings().jwt_encoding_algorithm
 
 
 def get_user_from_access_token(token: str = Depends(oauth2_scheme)) -> User:
