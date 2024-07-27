@@ -14,5 +14,4 @@ class JWTSettings(BaseSettings):
     
 @lru_cache
 def get_settings():
-    print("JWT settings: ", JWTSettings())
     return JWTSettings()

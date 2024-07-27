@@ -1,9 +1,9 @@
 from src.main import testing_client
-from src.config.jwt import jwt_settings
+from src.config.jwt import get_settings as jwt_settings
 
 def test_request_create_auth():
 
-    headers = {"Authorization": f"Bearer {jwt_settings.jwt_admin_token}"}
+    headers = {"Authorization": f"Bearer {jwt_settings().jwt_admin_token}"}
     
     json={
         "email": "juan_velasquez@mail.com"
@@ -21,7 +21,7 @@ def test_request_create_auth():
     
 def test_request_create():
 
-    headers = {"Authorization": f"Bearer {jwt_settings.jwt_admin_token}"}
+    headers = {"Authorization": f"Bearer {jwt_settings().jwt_admin_token}"}
     
     json= {
         "title": "Desempacar platanos",
@@ -40,7 +40,7 @@ def test_request_create():
     
 def list_all_requests():
 
-    headers = {"Authorization": f"Bearer {jwt_settings.jwt_admin_token}"}
+    headers = {"Authorization": f"Bearer {jwt_settings().jwt_admin_token}"}
     
     response = testing_client.get(
         "/requests/",
@@ -51,7 +51,7 @@ def list_all_requests():
     
 def test_request_by_id():
     # Bearer token in header
-    headers = {"Authorization": f"Bearer {jwt_settings.jwt_admin_token}"}
+    headers = {"Authorization": f"Bearer {jwt_settings().jwt_admin_token}"}
     response = testing_client.get(
         "/requests/6531e76fc7e8b449103d6afb",
         headers=headers  # Pasar los encabezados como un diccionario

@@ -1,5 +1,5 @@
 from src.main import testing_client
-from src.config.jwt import jwt_settings
+from src.config.jwt import get_settings as jwt_settings
 
 def test_read_login_fail_schema():
     response = testing_client.post(
@@ -52,7 +52,7 @@ def test_read_login():
     
 def test_me():
     # Bearer token in header
-    headers = {"Authorization": f"Bearer {jwt_settings.jwt_admin_token}"}
+    headers = {"Authorization": f"Bearer {jwt_settings().jwt_admin_token}"}
     response = testing_client.get(
         "/me/",
         headers=headers  # Pasar los encabezados como un diccionario
