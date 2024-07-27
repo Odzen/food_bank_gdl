@@ -8,13 +8,13 @@ Rest API that handles all the logic of tickets, users, and requests for administ
 
 ## Tech stack
 - Python 3.12.4
-- FastAPI
-- MongoDB
-- Mailgun (for email sending)
-- AWS (for file storage)
-- Render (for deployment)
-- Pytest (for testing)
-- SonarCloud (for code quality)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [MongoDB](https://www.mongodb.com/)
+- [Mailgun](https://www.mailgun.com/) (for email sending)
+- [AWS](https://aws.amazon.com/) (for file storage)
+- [Render](https://render.com/) (for deployment)
+- [Pytest](https://docs.pytest.org/en/stable/) (for testing)
+- [SonarCloud](https://www.sonarsource.com/products/sonarcloud/) (for code quality)
 
 ## To start
 1. Ask for `.env` variables, follow `.env.example` and create a local `.env` file with the correct values.
