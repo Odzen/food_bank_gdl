@@ -12,7 +12,7 @@ Rest API that handles all the logic of tickets, users, and requests for administ
 - [MongoDB](https://www.mongodb.com/)
 - [Mailgun](https://www.mailgun.com/) (for email sending)
 - [AWS](https://aws.amazon.com/) (for file storage)
-- [Render](https://render.com/) (for deployment)
+- [Heroku](https://www.heroku.com/) (for deployment)
 - [Pytest](https://docs.pytest.org/en/stable/) (for testing)
 - [SonarCloud](https://www.sonarsource.com/products/sonarcloud/) (for code quality)
 
@@ -52,4 +52,9 @@ In this project, we use AWS S3 to store images. To use this service you need to 
 
 ## To run the tests
 To run unit tests you can use `pytest` command.
+
+## Try it out
+Go to the [API documentation](https://food-bank-81fe7f521972.herokuapp.com/docs) to see the endpoints and try them out. The credentials to access the API are:
+- Email: admin@mail.com
+- Password: admin
 
