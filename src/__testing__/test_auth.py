@@ -46,8 +46,20 @@ def test_read_login_fail_credentials():
 def test_read_login():
     response = testing_client.post(
         "/login/",
-        json={"username": "juan.velasquez.acevedo@correounivalle.edu.co", "password": "password"},
-    )
+        data = {
+            "grant_type": "password",
+            "username": "juan@mail.com",
+            "password": "password",
+            "scope": "",
+            "client_id": "string",
+            "client_secret": "string"
+        },
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "accept": "application/json"
+        },
+    )    
+    
     assert response.status_code == 200
     
 def test_me():
