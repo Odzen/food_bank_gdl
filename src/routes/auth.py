@@ -1,3 +1,4 @@
+from pydantic import EmailStr
 from src.schemas.users import UserRetrieved, User
 from src.services.auth import AuthService
 from fastapi import APIRouter, status, Depends
