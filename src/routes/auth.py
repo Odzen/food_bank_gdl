@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from src.permissions.users import get_user_from_access_token
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
+from fastapi.exceptions import HTTPException
 
 
 router = APIRouter()
@@ -15,6 +16,7 @@ router = APIRouter()
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     
     username = form_data.username
+    
     password = form_data.password
     
     user, access_token = AuthService().login(username, password)

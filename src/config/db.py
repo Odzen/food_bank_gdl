@@ -21,6 +21,7 @@ def get_settings():
 
 if "localhost" in get_settings().db_cluster_domain or "127.0.0.1" in get_settings().db_cluster_domain:
     
+    print("Dev")
     mongodb_local_uri = f"mongodb://{get_settings().db_cluster_domain}/{get_settings().db_name}"
 
     client = MongoClient(mongodb_local_uri)
