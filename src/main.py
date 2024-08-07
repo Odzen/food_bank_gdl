@@ -21,18 +21,31 @@ The API can be used for other food banks as well, or any other organization that
 
 ## Users
 
-Developer users can:
+### Developer users can:
 
 * **CRUD** operations on all entities.
 * Send template emails using [Mailgun](https://www.mailgun.com/).
 * Upload images to the cloud media storage and get them by ID. Using direct endpoints.
 
-Admin users can:
+
+Try it out!
+- user: dev@example.com
+- password: dev
+
+### Admin users can:
 * **CRUD** operations on all Requests, tickets, other administrators or employees.
 
-Employees can:
+Try it out!
+- user: admin@mail.com
+- password: admin
+
+### Employees can:
 * Create requests, modify and read request created by them.
 * Create tickets, modify and read tickets created by them.
+
+Try it out!
+- user: employee@example.com
+- password: employee
 
 All users can:
 * Request an account creation to admin users. (A user can't create an account without admin approval)
