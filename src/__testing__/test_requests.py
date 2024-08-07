@@ -1,6 +1,7 @@
 from src.main import testing_client
 from src.config.jwt import get_settings as jwt_settings
 
+
 def test_request_create_auth():
 
     headers = {"Authorization": f"Bearer {jwt_settings().jwt_admin_token}"}

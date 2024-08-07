@@ -15,6 +15,7 @@ class AuthService():
         self.users_collection = db["users"]
         
     def login(self, email: EmailStr, password: str) -> Tuple[User, str]:
+        
         user = self.users_collection.find_one({"email": email})
 
         if not user:
