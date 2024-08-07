@@ -55,6 +55,16 @@ To run unit tests you can use `pytest` command.
 
 ## Try it out
 Go to the [API documentation](https://food-bank-81fe7f521972.herokuapp.com/docs) to see the endpoints and try them out. The credentials to access the API are:
+
+### Role: Developer
+- Email: dev@example.com
+- Password: dev
+
+### Role: Admin
 - Email: admin@mail.com
 - Password: admin
+
+### Role: Employee
+- Email: employee@example.com
+- Password: employee
 
